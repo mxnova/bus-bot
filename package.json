@@ -1,0 +1,28 @@
+{
+  "name": "bus-bot",
+  "version": "0.0.1",
+  "description": "Discord.js bot to notify members of a college Discord community when their buses arrive",
+  "main": "./src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mxnova/bus-bot.git"
+  },
+  "author": "Nova W",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mxnova/bus-bot/issues"
+  },
+  "homepage": "https://github.com/mxnova/bus-bot#readme",
+  "dependencies": {
+    "@discordjs/builders": "^0.12.0",
+    "@discordjs/rest": "^0.3.0",
+    "discord-api-types": "^0.27.3",
+    "discord.js": "^13.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.10.0"
+  }
+}
