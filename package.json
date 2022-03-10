@@ -1,6 +1,6 @@
 {
   "name": "bus-bot",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Discord.js bot to notify members of a college Discord community when their buses arrive",
   "main": "./src/main.js",
   "scripts": {
@@ -26,11 +26,14 @@
     "axios": "^0.26.0",
     "cheerio": "^1.0.0-rc.10",
     "discord-api-types": "^0.27.3",
-    "discord.js": "^13.6.0"
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0",
+    "mongoose": "^6.2.4"
   },
   "devDependencies": {
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.5.0",
+    "nodemon": "^2.0.15",
     "prettier": "^2.5.1"
   }
 }
