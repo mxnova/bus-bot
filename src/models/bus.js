@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const busSchema = new mongoose.Schema({
-  number: {
+  _id: {
     type: String,
     required: true,
   },

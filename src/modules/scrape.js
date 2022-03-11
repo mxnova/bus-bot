@@ -9,20 +9,20 @@ module.exports = () => {
       .then((response) => {
         const html = response.data;
         const $ = load(html);
-        const busData = [];
+        const busObjects = [];
 
-        // Add an object containing the bus number and location to busData for each bus
+        // Add an object containing the bus number (_id) and location to busObjects for each bus
         $('td:even').each(function () {
-          busData.push({
-            number: $(this).text(),
+          busObjects.push({
+            _id: $(this).text(),
             location: $(this).next().text(),
           });
         });
 
-        if (busData.length === 0) {
+        if (busObjects.length === 0) {
           reject('Scrape Failed (table missing from website)');
         } else {
-          resolve(busData);
+          resolve(busObjects);
         }
       })
       .catch((err) => reject(err));
