@@ -9,6 +9,7 @@ const { makeBusModel } = require('./modules/objectsToModels');
 const { initialiseBusCollection } = require('./modules/updateDatabase');
 
 // Create the bot client instance
+// @ts-ignore
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 // Load event handlers from event files
@@ -24,14 +25,13 @@ for (const file of eventFiles) {
 }
 
 // Load commands from command files
+// @ts-ignore
 client.commands = new Collection();
-// Commands starting with 'sub' are sub commands used by other commands and should not be imported here
-const commandFiles = readdirSync(`${__dirname}/commands`).filter(
-  (file) => !file.startsWith('sub')
-);
+const commandFiles = readdirSync(`${__dirname}/commands`);
 
 for (const file of commandFiles) {
   const command = require(`${__dirname}/commands/${file}`);
+  // @ts-ignore
   client.commands.set(command.data.name, command);
 }
 

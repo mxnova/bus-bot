@@ -5,6 +5,7 @@ module.exports = () => {
   const url = 'https://webservices.runshaw.ac.uk/bus/busdepartures.aspx';
 
   return new Promise((resolve, reject) => {
+    // @ts-ignore
     axios(url)
       .then((response) => {
         const html = response.data;
