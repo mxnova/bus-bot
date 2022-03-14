@@ -5,7 +5,7 @@ const { readdirSync } = require('fs');
 const mongoose = require('mongoose');
 
 const scrape = require('./modules/scrape');
-const { makeBusModel } = require('./modules/objectsToModels');
+const busModel = require('./models/bus');
 const { initialiseBusCollection } = require('./modules/updateDatabase');
 
 // Create the bot client instance
@@ -48,7 +48,7 @@ db.once('open', async () => {
     console.log('Scrape Complete');
 
     // Make a mongoose model array out of the bus data array
-    const busModels = busObjects.map(makeBusModel);
+    const busModels = busObjects.map((busObject) => new busModel(busObject));
 
     // Push those buses to the database
     busModels.forEach(initialiseBusCollection);
