@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-// Unfinished
-
 const guildSchema = new mongoose.Schema({
   _id: {
     type: String,
@@ -20,11 +18,11 @@ const guildSchema = new mongoose.Schema({
         },
       },
     ],
-    required: false,
+    required: true,
   },
-  busChannel: {
+  busChannelId: {
     type: String,
-    required: false,
+    required: true,
   },
 });
 

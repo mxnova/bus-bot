@@ -1,6 +1,6 @@
 {
   "name": "bus-bot",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Discord.js bot to notify members of a college Discord community when their buses arrive",
   "main": "./src/main.js",
   "scripts": {

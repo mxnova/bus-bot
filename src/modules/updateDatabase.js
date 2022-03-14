@@ -14,17 +14,4 @@ module.exports = {
       }
     }
   },
-
-  addGuild: async (guild) => {
-    const savedGuilds = await guildModel.find({ _id: guild._id });
-
-    if (savedGuilds.length === 0) {
-      try {
-        await guild.save();
-        console.log(`Guild ${guild._id} added to database`);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  },
 };

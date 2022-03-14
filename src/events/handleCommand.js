@@ -12,10 +12,16 @@ module.exports = {
       await command.execute(interaction);
     } catch (err) {
       console.error(err);
-      await interaction.reply({
+      const errorMessage = {
         content: 'There was an error executing the command',
         ephemeral: true,
-      });
+      };
+      // Some failed commands may have already replied to the interaction
+      try {
+        await interaction.reply(errorMessage);
+      } catch {
+        interaction.followUp(errorMessage);
+      }
     }
   },
 };

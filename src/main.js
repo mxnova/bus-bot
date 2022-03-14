@@ -51,7 +51,7 @@ db.once('open', async () => {
     const busModels = busObjects.map(makeBusModel);
 
     // Push those buses to the database
-    busModels.every(initialiseBusCollection);
+    busModels.forEach(initialiseBusCollection);
   } catch (err) {
     console.error(err);
   }

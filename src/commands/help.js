@@ -19,12 +19,15 @@ module.exports = {
       embeds: [
         new MessageEmbed()
           .setColor(0xe63312)
+          .setDescription(
+            '(Only /help and /setup are available before setup is complete)'
+          )
           .setFooter({
             text: `Sent from ${interaction.guild.name}`,
             iconURL: interaction.guild.iconURL(),
           })
           .setThumbnail(interaction.client.user.avatarURL())
-          .setTimestamp(new Date())
+          .setTimestamp(Date.now())
           .setTitle('Commands:')
           .addFields(...embedFields),
       ],
