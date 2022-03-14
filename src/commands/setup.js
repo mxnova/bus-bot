@@ -9,6 +9,7 @@ const ReplyEmbed = class extends MessageEmbed {
     super()
       // @ts-ignore
       .setColor(0xe63312)
+      .setDescription('(This may take some time...)')
       .setTimestamp(Date.now())
       .setTitle('Setup Progress...');
 
