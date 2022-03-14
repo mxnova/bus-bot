@@ -63,10 +63,24 @@ const ReplyEmbed = class extends MessageEmbed {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('setup')
-    .setDescription('Create channels/roles in this server for the Bus Bot!'),
+    .setDescription(
+      'Create channels/roles/commands in this server for the Bus Bot!'
+    ),
   async execute(interaction) {
-    // If the database already contains a record for this guild then inform the user and return
-    if ((await guildModel.find({ __id: interaction.guild.id })).length > 0) {
+    // If the user does not have the manage guild permission, return
+    if (
+      !(await (
+        await interaction.guild.members.cache.get(interaction.user.id)
+      ).permissions.has('MANAGE_GUILD'))
+    ) {
+      await interaction.reply(
+        'You need the "manage guild" permission to use this command!'
+      );
+      return;
+    }
+
+    // If the database already contains a record for this guild, return
+    if (await guildModel.findOne({ _id: interaction.guild.id })) {
       await interaction.reply('Setup already complete!');
       return;
     }

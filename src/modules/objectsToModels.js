@@ -5,7 +5,4 @@ module.exports = {
   makeBusModel(busObject) {
     return new busModel(busObject);
   },
-  makeGuildModel(guildObject) {
-    return new guildModel(guildObject);
-  },
 };

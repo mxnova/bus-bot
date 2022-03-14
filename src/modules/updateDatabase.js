@@ -3,9 +3,7 @@ const guildModel = require('../models/guild');
 
 module.exports = {
   initialiseBusCollection: async (bus) => {
-    const savedBusModels = await busModel.find({ _id: bus._id });
-
-    if (savedBusModels.length === 0) {
+    if (!(await busModel.findOne({ _id: bus._id }))) {
       try {
         await bus.save();
         console.log(`Bus ${bus._id} added to database`);
