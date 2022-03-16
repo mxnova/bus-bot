@@ -1,9 +1,9 @@
-const scrape = require('./scrape');
+const scrapeBusLocations = require('./scrapeBusLocations');
 const busModel = require('../models/bus');
 const { updateBusLocations } = require('./updateDatabase');
 
 module.exports = async () => {
-  const currentBusData = await scrape();
+  const currentBusData = await scrapeBusLocations();
   const savedBuses = await busModel.find();
   const changedBuses = [];
 
@@ -20,4 +20,6 @@ module.exports = async () => {
   } catch (err) {
     console.error(err);
   }
+
+  return changedBuses;
 };

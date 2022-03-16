@@ -79,12 +79,13 @@ module.exports = {
     });
 
     // Create the bus updates channel and save its id
-    const busChannelId = await interaction.guild.channels.create(
-      'bus-updates',
-      {
+    const busChannelId = (
+      await interaction.guild.channels.create('bus-updates', {
         reason: 'Bus Bot setup',
-      }
-    );
+      })
+    )
+      .toString()
+      .replace(/\D/g, '');
 
     // Update the reply
     interaction.editReply({
@@ -120,7 +121,7 @@ module.exports = {
     const guild = new guildModel({
       _id: interaction.guild.id,
       busRoles: guildModelBusRoleData,
-      busChannelId: busChannelId.toString().replace(/\D/g, ''),
+      busChannelId: busChannelId,
     });
 
     // Push the guild to the Guilds collection in the database

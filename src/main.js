@@ -3,10 +3,12 @@ require('dotenv').config();
 const { Client, Intents, Collection } = require('discord.js');
 const { readdirSync } = require('fs');
 const mongoose = require('mongoose');
-
-const scrape = require('./modules/scrape');
+const { scheduleJob } = require('node-schedule');
+const scrapeBusLocations = require('./modules/scrapeBusLocations');
 const busModel = require('./models/bus');
 const { initialiseBusCollection } = require('./modules/updateDatabase');
+const sendBusUpdates = require('./modules/sendBusUpdates');
+const getChangedBuses = require('./modules/getChangedBuses');
 
 // Create the bot client instance
 // @ts-ignore
@@ -35,6 +37,8 @@ for (const file of commandFiles) {
   client.commands.set(command.data.name, command);
 }
 
+client.login(process.env.DISCORD_TOKEN);
+
 // Connect to the database
 mongoose.connect(process.env.MONGO_URI);
 const db = mongoose.connection;
@@ -44,7 +48,7 @@ db.once('open', async () => {
   console.log('Database connection opened');
 
   try {
-    const busData = await scrape();
+    const busData = await scrapeBusLocations();
     console.log('Scrape Complete');
 
     // Make a mongoose model array out of the bus data array
@@ -59,4 +63,14 @@ db.once('open', async () => {
 
 db.on('error', (err) => console.error(err));
 
-client.login(process.env.DISCORD_TOKEN);
+// Run sendBusUpdates every 5 mins between 3 and 5pm from Monday to Friday from September to July
+scheduleJob(
+  'dailyUpdates',
+  '*/5 15-17 * 1-7,8-12 1-5',
+  async () => await sendBusUpdates(client)
+);
+
+// Run getChangedBuses at 12:30am from Tuesday to Saturday from September to July
+scheduleJob('resetLocations', '30 0 * 1-7,8-12 2-6', async () => {
+  await getChangedBuses();
+});
