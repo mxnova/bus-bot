@@ -1,14 +1,26 @@
 const busModel = require('../models/bus');
-const guildModel = require('../models/guild');
 
 module.exports = {
-  initialiseBusCollection: async (bus) => {
-    if (!(await busModel.findOne({ _id: bus._id }))) {
-      try {
-        await bus.save();
-        console.log(`Bus ${bus._id} added to database`);
-      } catch (err) {
-        console.error(err);
+  initialiseBusCollection: async (buses) => {
+    for (const bus of buses) {
+      if (!(await busModel.findById(bus._id))) {
+        try {
+          await bus.save();
+          console.log(`Bus ${bus._id} added to database`);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  },
+  updateBusLocations: async (buses) => {
+    for (const bus of buses) {
+      if ((await busModel.findById(bus._id)).location !== bus.location) {
+        try {
+          await bus.updateOne({ _id: bus._id }, { location: bus.location });
+        } catch (err) {
+          console.error(err);
+        }
       }
     }
   },

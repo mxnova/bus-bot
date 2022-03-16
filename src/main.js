@@ -44,14 +44,14 @@ db.once('open', async () => {
   console.log('Database connection opened');
 
   try {
-    const busObjects = await scrape();
+    const busData = await scrape();
     console.log('Scrape Complete');
 
     // Make a mongoose model array out of the bus data array
-    const busModels = busObjects.map((busObject) => new busModel(busObject));
+    const buses = busData.map((busObject) => new busModel(busObject));
 
     // Push those buses to the database
-    busModels.forEach(initialiseBusCollection);
+    await initialiseBusCollection(buses);
   } catch (err) {
     console.error(err);
   }

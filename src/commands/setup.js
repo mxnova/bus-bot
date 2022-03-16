@@ -1,65 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
 const registerCommands = require('../modules/registerCommands');
 const busModel = require('../models/bus');
 const guildModel = require('../models/guild');
-
-const ReplyEmbed = class extends MessageEmbed {
-  constructor(replyProgress) {
-    super()
-      // @ts-ignore
-      .setColor(0xe63312)
-      .setDescription('(This may take some time...)')
-      .setTimestamp(Date.now())
-      .setTitle('Setup Progress...');
-
-    // Initialise the field name variables with ⚪
-    let [rolesIcon, channelIcon, commandsIcon, completeIcon] =
-      Array(4).fill('⚪');
-
-    switch (replyProgress) {
-      case 'rolesComplete':
-        rolesIcon = '🟢';
-        channelIcon = '🟡';
-        break;
-
-      case 'channelComplete':
-        rolesIcon = '🟢';
-        channelIcon = '🟢';
-        commandsIcon = '🟡';
-        break;
-
-      case 'commandsComplete':
-        rolesIcon = '🟢';
-        channelIcon = '🟢';
-        commandsIcon = '🟢';
-        completeIcon = '🟡';
-        break;
-
-      case 'setupComplete':
-        rolesIcon = '🟢';
-        channelIcon = '🟢';
-        commandsIcon = '🟢';
-        completeIcon = '🟢';
-        break;
-
-      case 'rolesFailed':
-        rolesIcon = '🔴';
-        break;
-
-      default:
-        rolesIcon = '🟡';
-        break;
-    }
-
-    this.addFields([
-      { name: rolesIcon, value: 'Create Roles!' },
-      { name: channelIcon, value: 'Create Channel!' },
-      { name: commandsIcon, value: 'Register Commands!' },
-      { name: completeIcon, value: 'Complete Setup!' },
-    ]);
-  }
-};
+const SetupEmbed = require('../embeds/setup');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -81,14 +24,14 @@ module.exports = {
     }
 
     // If the database already contains a record for this guild, return
-    if (await guildModel.findOne({ _id: interaction.guild.id })) {
+    if (await guildModel.findById(interaction.guild.id)) {
       await interaction.reply('Setup already complete!');
       return;
     }
 
     // Send the initial reply
     await interaction.reply({
-      embeds: [new ReplyEmbed()],
+      embeds: [new SetupEmbed()],
     });
 
     /**
@@ -109,7 +52,7 @@ module.exports = {
       } catch (err) {
         if (err.message === 'Missing Permissions') {
           interaction.editReply({
-            embeds: [new ReplyEmbed('rolesFailed')],
+            embeds: [new SetupEmbed('rolesFailed')],
           });
           interaction.followUp({
             content:
@@ -132,7 +75,7 @@ module.exports = {
 
     // Update the reply
     await interaction.editReply({
-      embeds: [new ReplyEmbed('rolesComplete')],
+      embeds: [new SetupEmbed('rolesComplete')],
     });
 
     // Create the bus updates channel and save its id
@@ -145,7 +88,7 @@ module.exports = {
 
     // Update the reply
     interaction.editReply({
-      embeds: [new ReplyEmbed('channelComplete')],
+      embeds: [new SetupEmbed('channelComplete')],
     });
 
     // An array containing the names of all the clients commands
@@ -156,7 +99,7 @@ module.exports = {
 
     // Update the reply
     await interaction.editReply({
-      embeds: [new ReplyEmbed('commandsComplete')],
+      embeds: [new SetupEmbed('commandsComplete')],
     });
 
     // An array containing all of the bus roles just created
@@ -165,9 +108,9 @@ module.exports = {
     ).filter((role) => busIds.includes(role.name));
 
     // An array containing the bus role data that the mongoose guild object needs
-    const busModelRoles = [];
+    const guildModelBusRoleData = [];
     for (const [_, busRole] of busRoles) {
-      busModelRoles.push({
+      guildModelBusRoleData.push({
         _id: busRole.id,
         name: busRole.name,
       });
@@ -176,7 +119,7 @@ module.exports = {
     // Create a mongoose guild object for this guild
     const guild = new guildModel({
       _id: interaction.guild.id,
-      busRoles: busModelRoles,
+      busRoles: guildModelBusRoleData,
       busChannelId: busChannelId.toString().replace(/\D/g, ''),
     });
 
@@ -185,7 +128,7 @@ module.exports = {
 
     // Update reply
     await interaction.editReply({
-      embeds: [new ReplyEmbed('setupComplete')],
+      embeds: [new SetupEmbed('setupComplete')],
     });
 
     await interaction.followUp('Setup Complete!');
