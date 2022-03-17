@@ -12,6 +12,8 @@ module.exports = {
         }
       }
     }
+
+    await busModel.updateMany({}, { location: ' ' });
   },
   updateBusLocations: async (buses) => {
     for (const bus of buses) {
