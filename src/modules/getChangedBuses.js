@@ -3,15 +3,22 @@ const busModel = require('../models/bus');
 const { updateBusLocations } = require('./updateDatabase');
 
 module.exports = async () => {
-  const currentBusData = await scrapeBusLocations();
+  const currentBusData = [];
+  // If scrape fails, return a blank list signifying no changed buses
+  try {
+    currentBusData.concat(await scrapeBusLocations());
+  } catch {
+    return [];
+  }
   const savedBuses = await busModel.find();
   const changedBuses = [];
 
   for (const currentBus of currentBusData) {
-    const foundBus = await savedBuses.find(
+    const matchedBus = await savedBuses.find(
       (savedBus) => savedBus._id === currentBus._id
     );
-    if (foundBus.location !== currentBus.location) changedBuses.push(foundBus);
+    if (matchedBus.location !== currentBus.location)
+      changedBuses.push(currentBus);
   }
 
   // Save the changed bus locations to the database

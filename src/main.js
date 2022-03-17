@@ -63,14 +63,16 @@ db.once('open', async () => {
 
 db.on('error', (err) => console.error(err));
 
-// Run sendBusUpdates every 5 mins between 3 and 5pm from Monday to Friday from September to July
+// Run sendBusUpdates every 5 mins between 3 and 5pm every weekday from September to July
 scheduleJob(
   'dailyUpdates',
-  '*/5 15-17 * 1-7,8-12 1-5',
+  '*/5 15-17 * 1-7,9-12 1-5',
   async () => await sendBusUpdates(client)
 );
 
-// Run getChangedBuses at 12:30am from Tuesday to Saturday from September to July
-scheduleJob('resetLocations', '30 0 * 1-7,8-12 2-6', async () => {
-  await getChangedBuses();
-});
+// Reset bus locations to ' ' every weekday at 5pm from September to July
+scheduleJob(
+  'resetLocations',
+  '0 17 * 1-7,9-12 1-5',
+  async () => await busModel.updateMany({}, { location: ' ' })
+);

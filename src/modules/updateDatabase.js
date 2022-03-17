@@ -17,7 +17,10 @@ module.exports = {
     for (const bus of buses) {
       if ((await busModel.findById(bus._id)).location !== bus.location) {
         try {
-          await bus.updateOne({ _id: bus._id }, { location: bus.location });
+          await busModel.updateOne(
+            { _id: bus._id },
+            { location: bus.location }
+          );
         } catch (err) {
           console.error(err);
         }
