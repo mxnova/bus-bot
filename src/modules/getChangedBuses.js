@@ -6,7 +6,7 @@ module.exports = async () => {
   const currentBusData = [];
   // If scrape fails, return a blank list signifying no changed buses
   try {
-    currentBusData.concat(await scrapeBusLocations());
+    currentBusData.push(...(await scrapeBusLocations()));
   } catch {
     return [];
   }
